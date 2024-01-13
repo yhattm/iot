@@ -1,0 +1,3 @@
+./buildApp
+aws s3 cp iot s3://bencpchen/iot --acl public-read
+rm iot
