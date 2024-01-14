@@ -1,0 +1,11 @@
+[Unit]
+Description=iot
+
+[Service]
+User=pi
+Type=simple
+ExecStart=/home/pi/bin/iot http
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
