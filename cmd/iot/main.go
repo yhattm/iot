@@ -3,14 +3,19 @@ package main
 import (
 	"context"
 	"iot/internal/gpio"
+	"net/http"
 
 	"github.com/gookit/goutil/cflag"
 	"github.com/gookit/goutil/cliutil"
 	"github.com/gookit/goutil/dump"
+
+	"github.com/gin-gonic/gin"
 )
 
+const Version = "7.1.14"
+
 var optsGpio = struct {
-	pin int
+	pin    int
 	action string
 }{}
 
@@ -18,7 +23,7 @@ func main() {
 	_ = context.Background()
 	app := cflag.NewApp()
 	app.Desc = "iot"
-	app.Version = "7.1.14"
+	app.Version = Version
 
 	err := gpio.Init()
 	if err == nil {
@@ -40,5 +45,31 @@ func main() {
 	}
 	app.Add(gpioCmd)
 
+	httpCmd := cflag.NewCmd("http", "http service")
+	httpCmd.Func = func(c *cflag.Cmd) error {
+		server := gin.Default()
+		server.GET("/", handleVersion)
+		server.GET("/open", handleOpen)
+		return server.Run(":8080")
+	}
+	app.Add(httpCmd)
+
 	app.Run()
+}
+
+func handleOpen(c *gin.Context) {
+	c.Header("Content-Type", "text/html")
+	c.Set("content-type", "application/json")
+	gpio.SetAction(14, gpio.ActionLowToHigh)
+	c.Status(http.StatusOK)
+	c.Writer.Write([]byte("opened"))
+	c.Writer.Flush()
+}
+
+func handleVersion(c *gin.Context) {
+	c.Header("Content-Type", "text/html")
+	c.Set("content-type", "application/json")
+	c.Status(http.StatusOK)
+	c.Writer.Write([]byte(Version))
+	c.Writer.Flush()
 }
