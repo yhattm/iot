@@ -1,6 +1,10 @@
 package gpio
 
-import "github.com/stianeikeland/go-rpio/v4"
+import (
+	"time"
+
+	"github.com/stianeikeland/go-rpio/v4"
+)
 
 type Action string
 
@@ -8,7 +12,7 @@ type Action string
 const (
 	ActionHigh   = "high"
 	ActionLow    = "low"
-	ActionToggle = "toggle"
+	ActionLowToHigh = "open"
 )
 
 func Init() error {
@@ -28,7 +32,9 @@ func SetAction(p int, action Action ) {
 		pin.High()
 	case ActionLow:
 		pin.Low()
-	case ActionToggle:
-		pin.Toggle()
+	case ActionLowToHigh:
+		pin.High()
+		time.Sleep(time.Millisecond * 500)
+		pin.Low()
 	}
 }

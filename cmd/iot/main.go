@@ -27,8 +27,8 @@ func main() {
 
 	gpioCmd := cflag.NewCmd("gpio", "gpio cmd")
 	gpioCmd.OnAdd = func(c *cflag.Cmd) {
-		c.IntVar(&optsGpio.pin, "pin", 10, "gpio pin;true;p")
-		c.StringVar(&optsGpio.action, "action", "toggle", "gpio action;true;a")
+		c.IntVar(&optsGpio.pin, "pin", 14, "gpio pin;true;p")
+		c.StringVar(&optsGpio.action, "action", "open", "gpio action;true;a")
 	}
 	gpioCmd.Func = func(c *cflag.Cmd) error {
 		dump.P(optsGpio, c.Args())
