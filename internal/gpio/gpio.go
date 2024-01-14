@@ -20,15 +20,15 @@ func Release() error {
 }
 
 //https://datasheets.raspberrypi.com/rpi3/raspberry-pi-3-b-plus-reduced-schematics.pdf
-func SetAction(pin int, action Action ) {
-	upin := uint8(pin)
-	rpio.Pin(pin).Output()
+func SetAction(p int, action Action ) {
+	pin := rpio.Pin(uint8(p))
+	pin.Output()
 	switch action {
 	case ActionHigh:
-		rpio.Pin(upin).High()
+		pin.High()
 	case ActionLow:
-		rpio.Pin(upin).Low()
+		pin.Low()
 	case ActionToggle:
-		rpio.Pin(upin).Toggle()
+		pin.Toggle()
 	}
 }
